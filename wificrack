@@ -8,7 +8,9 @@ computer.touch(pwd,"wifi_passwords")
 
 for network in networks
 	network = network.split(" ")
-	crypto.aireplay(network[0],network[2],7000)
-	wifi_passwords = computer.File(pwd+"/wifi_passwords")
-	wifi_passwords.set_content(wifi_passwords.content + "\n" + network[0] + " " + network[2] + " " + (crypto.aircrack(pwd + "/file.cap")))
+	if network[1] > "45%" then
+		crypto.aireplay(network[0],network[2],7300)
+		wifi_passwords = computer.File(pwd+"/wifi_passwords")
+		wifi_passwords.set_content(wifi_passwords.content + "\n" + network[0] + " " + network[2] + " " + (crypto.aircrack(pwd + "/file.cap")))
+end if
 end for
