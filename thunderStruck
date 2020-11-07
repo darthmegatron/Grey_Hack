@@ -1,0 +1,26 @@
+metaxploit=include_lib("/lib/metaxploit.so")
+
+if params.len > 1 then
+	net_session=metaxploit.net_use(params[0],params[1].val) //net session targetting port
+else
+	net_session=metaxploit.net_use(params[0]) //net session targetting router
+end if
+
+net_dump=net_session.dump_lib //metalib
+chk_ver=net_dump.version //metalib version
+chk_nam=net_dump.lib_name
+
+if chk_nam == "libssh.so" and chk_ver == "2.5.0" then
+	exploit=net_dump.overflow("0x1E45CFC","listemplicksourcelistat")
+	exploit.start_terminal //gain remote shell
+end if
+
+if chk_nam == "libftp.so" and chk_ver == "1.9.2" then
+	exploit=net_dump.overflow("0x5FD0912A","doposition++","password")
+	print("New password is now 'password'") //changes a user password to "password"
+end if
+
+if chk_nam == "libhttp.so" and chk_ver == "2.7.8" then
+	exploit=net_dump.overflow("0x5E3E44FC","uffect","password")
+	print("New password is now 'password'") //changes a user password to "password"
+end if
