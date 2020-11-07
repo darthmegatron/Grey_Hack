@@ -1,4 +1,5 @@
 metaxploit=include_lib("/lib/metaxploit.so")
+if params.len != 2 or params[0] == "-h" or params[0] == "--help" then exit("<b>Usage: "+program_path.split("/")[-1]+" [ip_address] [port]</b>")
 
 if params.len > 1 then
 	net_session=metaxploit.net_use(params[0],params[1].val) //net session targetting port
