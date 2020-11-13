@@ -1,0 +1,47 @@
+metaxploit=include_lib("/lib/metaxploit.so")
+if params.len > 2 or params[0] == "-h" or params[0] == "--help" then exit("<b>Usage: "+program_path.split("/")[-1]+" [ip_address] [port]</b>")
+
+if params.len > 1 then
+	net_session=metaxploit.net_use(params[0],params[1].val) //net session targetting port
+else
+	net_session=metaxploit.net_use(params[0]) //net session targetting router
+	end if
+
+computer=get_shell.host_computer
+net_dump=net_session.dump_lib //metalib
+check_version=net_dump.version //metalib version
+check_name=net_dump.lib_name //metalib name
+print("Target: " + check_name + " - v" + check_version)
+
+
+try_exploit=function(memAddress,unsecValue)
+	exploit=net_dump.overflow(memAddress,unsecValue,"passwd")
+	print("Returned " + typeof(exploit) + " object")
+	if exploit == null then
+		print()
+		info()
+	else if str(exploit) == "shell" then
+		exploit.start_terminal
+	else if str(exploit) == "file" then
+		print(exploit.name + " " + exploit.permissions)
+	else if str(exploit) == "computer" then
+		users=exploit.File("/home").get_folders
+		print("<b>Users:</b>")
+		for folder in users
+			print(folder.name)
+		end for
+		print("<b>passwd contents:</b>")
+		passwd=exploit.File("/etc/passwd")
+		print(passwd.content)
+	end if
+end function
+
+
+info=function()
+	memAddr=user_input("<b>Memory Address: </b>")
+	unSecVal=user_input("<b>Unsecure Value: </b>")
+	try_exploit(memAddr,unSecVal)
+end function
+
+
+info()
