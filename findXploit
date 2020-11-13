@@ -1,0 +1,34 @@
+metaxploit=include_lib("/lib/metaxploit.so")
+
+if params.len > 2 or params[0] == "-h" or params[0] == "--help" then exit("<b>Usage: "+program_path.split("/")[-1]+" [ip_address] [port]</b>")
+
+if params.len > 1 then
+	net_session=metaxploit.net_use(params[0],params[1].val) //net session targetting port
+else
+	net_session=metaxploit.net_use(params[0]) //net session targetting router
+end if
+
+computer=get_shell.host_computer
+net_dump=net_session.dump_lib //metalib
+check_version=net_dump.version //metalib version
+check_name=net_dump.lib_name //metalib name
+print("Target: " + check_name + " - v" + check_version)
+
+
+find_vulnerable=function()
+	vulAddrs=metaxploit.scan(net_dump) //get memory addresses
+	if params.len > 1 then
+		computer.touch(computer.current_path,"vul"+params[0]+"-"+params[1])
+		vulFile=computer.File(computer.current_path + "/vul"+params[0] + "-" + params[1])
+	else
+		computer.touch(computer.current_path,"vul"+params[0])
+		vulFile=computer.File(computer.current_path + "/vul"+params[0])
+	end if
+	vulFile.set_content(check_name + " - " + check_version)
+	for item in vulAddrs
+		vulFile.set_content(vulFile.content + "\n" + "Memory Address - " + item + "\n" + metaxploit.scan_address(net_dump,item))
+	end for
+end function
+
+
+find_vulnerable()
