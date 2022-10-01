@@ -5,4 +5,4 @@ A collection of scripts for the game Grey Hack (https://store.steampowered.com/a
 
 <b>wificrack - </b> Crack passwords for all visable wifi networks. Saves passwords to "wifi_passwords"
 
-<b>exploitHunter - </b> Return a dictionary with the memory address and all vulnerable words and requirements.
+<b>exploitHunter - </b> Return a dictionary with the affected memory address(es) of the router or service and all vulnerable words and requirements.
