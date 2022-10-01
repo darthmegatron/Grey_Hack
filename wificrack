@@ -1,7 +1,8 @@
+// Version 1.1
 computer = get_shell.host_computer
 networks = computer.wifi_networks("wlan0")
 crypto = include_lib("/lib/crypto.so")
-pwd = computer.current_path
+pwd = current_path
 
 crypto.airmon("start","wlan0")
 computer.touch(pwd,"wifi_passwords")
@@ -11,6 +12,6 @@ for network in networks
 	if network[1] > "45%" then
 		crypto.aireplay(network[0],network[2],7300)
 		wifi_passwords = computer.File(pwd+"/wifi_passwords")
-		wifi_passwords.set_content(wifi_passwords.content + "\n" + network[0] + " " + network[2] + " " + (crypto.aircrack(pwd + "/file.cap")))
-end if
+		wifi_passwords.set_content(wifi_passwords.get_content + "\n" + network[0] + " " + network[2] + " " + (crypto.aircrack(pwd + "/file.cap")))
+	end if
 end for
